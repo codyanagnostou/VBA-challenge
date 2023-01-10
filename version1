@@ -1,0 +1,91 @@
+Sub VBAhomework()
+'Define variables
+Dim ws As Worksheet
+Dim ticker As String
+Dim vol As Long
+Dim year_open As Double
+Dim year_close As Double
+Dim yearly_change As Double
+Dim percent_change As Double
+Dim Summary_Table_Row As Integer
+Dim lastrow As Long
+lastrow = ActiveSheet.UsedRange.Rows.Count
+For Each ws In Worksheets
+ws.Activate
+ws.Cells(1, 9).Value = "Ticker"
+ws.Cells(1, 10).Value = "Yearly Change"
+ws.Cells(1, 11).Value = "Percent Change"
+ws.Cells(1, 12).Value = "Total Stock Volume"
+ws.Cells(1, 9).WrapText = True
+ws.Cells(1, 10).WrapText = True
+ws.Cells(1, 11).WrapText = True
+ws.Cells(1, 12).WrapText = True
+Summary_Table_Row = 2
+'Create loop
+For I = 2 To lastrow
+'If the ticker changes then...
+If ws.Cells(I, 1).Value <> ws.Cells(I + 1, 1).Value Then
+'Add values
+ticker = ws.Cells(I, 1).Value
+yearly_change = year_close - year_open
+percent_change = (year_close - year_open) / year_close
+'Print the ticker to the summary table row
+ws.Cells(Summary_Table_Row, 9).Value = ticker
+'Add to total volume
+vol = vol + ws.Cells(I, 7).Value
+'Add Year Open
+year_open = year_open + ws.Cells(I, 3).Value
+'Add Year Close
+year_close = year_close + ws.Cells(I, 6).Value
+'Print the total volume to the summary table row
+ws.Cells(Summary_Table_Row, 12).Value = vol
+'Print Yearly Change
+ws.Cells(Summary_Table_Row, 10).Value = yearly_change
+ws.Range("K1:K" & lastrow).NumberFormat = "0.00%"
+'Print Percent change
+ws.Cells(Summary_Table_Row, 11).Value = percent_change
+'Add summary table row
+Summary_Table_Row = Summary_Table_Row + 1
+'Reset Total Volume back to 0
+vol = 0
+year_open = 0
+year_close = 0
+'Prevents overflow error
+On Error Resume Next
+Else
+'If the ticker does not change, continue to add to volume...
+vol = vol + ws.Cells(I, 7).Value
+'Add Year Open
+year_open = year_open + ws.Cells(I, 3).Value
+'Add Year Close
+year_close = year_close + ws.Cells(I, 6).Value
+End If
+Next I
+  'format columns colors
+    Dim sheet_name As String
+    Dim rg As Range
+    Dim g As Long
+    Dim c As Long
+    Dim color_cell As Range
+    
+Set rg = ws.Range("J2", Range("J2").End(xlDown))
+c = rg.Cells.Count
+sheet_name = ActiveSheet.Name
+        Worksheets(sheet_name).c
+        Worksheets(sheet_name).c
+    
+    For g = 1 To c
+    Set color_cell = rg(g)
+Select Case color_cell
+        Case Is >= 0
+            With color_cell
+                .Interior.Color = vbGreen
+            End With
+        Case Is < 0
+            With color_cell
+                .Interior.Color = vbRed
+            End With
+       End Select
+    Next g
+Next
+End Sub
